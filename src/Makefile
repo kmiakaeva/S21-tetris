@@ -45,7 +45,7 @@ dvi:
 	xelatex -output-directory=dvi dvi/documentation.tex
 
 dist: install
-	tar -czvf tetris.tar.gz Makefile brick_game gui unit_test brick_game.c brick_game.h
+	tar -czvf tetris.tar.gz Makefile brick_game gui unit_test brick_game.c brick_game.h Diagrama.pdf
 
 test: clean build/libtetris.a
 	echo 0 > unit_test/high_score.txt
@@ -58,8 +58,9 @@ gcov_report: clean build/libtetris.a
 	gcc $(CFLAGS) $(GCOV_FLAGS) unit_test/unit_test.c brick_game/tetris/backend.c -lncurses -Lbuild -ltetris $(LDFLAGS) -o gcov/gcov_test
 	cd gcov && ./gcov_test
 	lcov --capture --directory . --output-file gcov/coverage.info
+	lcov --remove gcov/coverage.info '*unit_test/*' --output-file gcov/coverage.info
 	genhtml -o gcov/report gcov/coverage.info
-	#$(OPEN) ./report/index.html
+	#$(OPEN) gcov/report/brick_game/tetris/index.html
 
 clang_format:
 	cp ../materials/linters/.clang-format .clang-format
@@ -85,4 +86,4 @@ clear:
 
 # install gcovr: sudo apt install gcovr
 # install ncurses: sudo apt-get install libncurses5-dev libncursesw5-dev
-# install xelatex: sudo apt-get install texlive-xetex
+# install xelatex: sudo apt-get install texlive-xetex (or sudo apt-get install texlive-latex-extra)
